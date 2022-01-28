@@ -24,9 +24,7 @@ func init() {
 	module = _module
 }
 
-func callStart(
-	args ...string,
-) (string, error) {
+func callStart(args ...string) (string, error) {
 	builder := wasmer.NewWasiStateBuilder("wasi").
 		CaptureStdout().
 		CaptureStderr()
