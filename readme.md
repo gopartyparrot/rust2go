@@ -2,22 +2,11 @@
 
 call rust code from go
 
-## How
-
-- Build rust code to wasi
-  - rust parse wasi args
-  - rust print result(result/error) to stdout/stderr
-- Call wasi from go, use wasm runtime(implemented by go)
-  - read stdout/stderr as result/err
-
 ## Start up
 
 ```bash
-# setup
-make setup
-
 # build wasm
-make buildWasm
+make zero
 
 # test
 make test
@@ -36,15 +25,18 @@ import (
 )
 
 func main() {
-  fmt.Println(rust2go.ParseU64F64("2276328218695758774272"))
-  // output:
-  // 123.40000000000000568434 <nil>
+  b, _ := rust2go.F64ToFixBits(ctx, 0.25)
+  f, _ := rust2go.U128BitsToFix(ctx, big.NewInt(4611686018427387904))
 }
+```
+
+## Benchmarks
+
+```
+cpu: Intel(R) Core(TM) i5-10400F CPU @ 2.90GHz
+BenchmarkFixFunctions
+BenchmarkFixFunctions-12    	   68386	     42035 ns/op	   17977 B/op	     117 allocs/op
 ```
 
 ## FAQ
 
-- Q: why wasi instead of wasm
-  - A: easier to understand and don't need to use wasm memory api
-- Q: why not https://github.com/bytecodealliance/wasmtime-go
-  - A: wasmtime uses CGO to consume the C API of wasmtime project(which wrote in rust), it increase build size(at least 20M), and project only works on some specific platform.

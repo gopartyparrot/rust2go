@@ -1,11 +1,25 @@
 [package]
-name = "rust2go"
+name = "wasmlib"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[lib]
+crate-type = ["cdylib"]
+
 [dependencies]
-wasi = "0.11.0+wasi-snapshot-preview1"
-clap = { version = "3.0.13", features = ["derive"] }
-fixed = "1.7.0"
+# wee_aloc is a WebAssembly optimized allocator, which is needed to use non-numeric types like strings.
+# See https://docs.rs/wee_alloc/latest/wee_alloc/
+wee_alloc = "0.4.5"
+
+wasm-bindgen = "0.2"
+fixed = "=1.19.0"
+
+# Below settings dramatically reduce wasm output size
+# See https://rustwasm.github.io/book/reference/code-size.html#optimizing-builds-for-code-sizewasm-opt -Oz -o
+# See https://doc.rust-lang.org/cargo/reference/profiles.html#codegen-units
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1

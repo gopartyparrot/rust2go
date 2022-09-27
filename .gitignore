@@ -21,3 +21,5 @@ vendor/
 
 *id.json
 .env
+
+lib_wasm32/

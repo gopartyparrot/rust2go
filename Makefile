@@ -1,8 +1,7 @@
-setup:
-	rustup target add wasm32-wasi
-buildWasm:
-	cargo build --target wasm32-wasi --release
-	cp target/wasm32-wasi/release/rust2go.wasm ./wasi.wasm
+zero:
+	cargo build --release --target wasm32-unknown-unknown 
+	cp target/wasm32-unknown-unknown/release/wasmlib.wasm ./wasmlib.wasm
+	
 test:
 	@echo ===================rust   test====================
 	cargo test
