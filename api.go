@@ -3,6 +3,8 @@ package rust2go
 import (
 	"context"
 	"math/big"
+
+	"github.com/shopspring/decimal"
 )
 
 var instance *Instance
@@ -19,6 +21,6 @@ func F64ToFixBits(ctx context.Context, f float64) (*big.Int, error) {
 	return instance.F64ToFixBits(ctx, f)
 }
 
-func U128BitsToFix(ctx context.Context, b *big.Int) (float64, error) {
+func U128BitsToFix(ctx context.Context, b *big.Int) (decimal.Decimal, error) {
 	return instance.U128BitsToFix(ctx, b)
 }

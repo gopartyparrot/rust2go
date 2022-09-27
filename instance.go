@@ -7,10 +7,10 @@ import (
 	"log"
 	"math/big"
 	"os"
-	"strconv"
 	"sync"
 
 	"github.com/pkg/errors"
+	"github.com/shopspring/decimal"
 	"github.com/tetratelabs/wazero"
 	"github.com/tetratelabs/wazero/api"
 )
@@ -96,13 +96,13 @@ func (inst *Instance) F64ToFixBits(ctx context.Context, f float64) (*big.Int, er
 	return b, nil
 }
 
-func (inst *Instance) U128BitsToFix(ctx context.Context, b *big.Int) (float64, error) {
+func (inst *Instance) U128BitsToFix(ctx context.Context, b *big.Int) (decimal.Decimal, error) {
 	ret, err := inst.processString(ctx, "u128bits_to_fix", b.String())
 	if err != nil {
-		return 0, err
+		return decimal.Zero, err
 	}
 
-	return strconv.ParseFloat(ret, 64)
+	return decimal.NewFromString(ret)
 }
 
 func (inst *Instance) processString(ctx context.Context, callFn string, input string) (string, error) {

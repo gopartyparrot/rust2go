@@ -30,7 +30,7 @@ func TestInstance(t *testing.T) {
 	f64, err := U128BitsToFix(ctx, u128bits)
 	require.NoError(t, err)
 
-	deltaEq(t, f, f64)
+	deltaEq(t, f, f64.InexactFloat64())
 
 	//u128::max ==> 340282366920938463463374607431768211455
 	max_exceeded := big.NewInt(0)
@@ -84,7 +84,7 @@ func TestReInstantiateThreshold(t *testing.T) {
 			break
 		}
 
-		deltaEq(t, f, f64)
+		deltaEq(t, f, f64.InexactFloat64())
 		count++
 	}
 
@@ -114,7 +114,7 @@ outer:
 		f64, err := U128BitsToFix(ctx, u128bits)
 		require.NoError(t, err)
 
-		deltaEq(t, f, f64)
+		deltaEq(t, f, f64.InexactFloat64())
 		count++
 	}
 	t.Logf("total count: %d, ops/sec: %d\n", count, 2*count/5)
@@ -149,7 +149,7 @@ func TestConcurrency(t *testing.T) {
 
 				f64, err := U128BitsToFix(ctx, u128bits)
 				require.NoError(t, err)
-				deltaEq(t, f, f64)
+				deltaEq(t, f, f64.InexactFloat64())
 			}
 		}()
 	}
