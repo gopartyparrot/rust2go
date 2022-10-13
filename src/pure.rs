@@ -19,8 +19,16 @@ pub fn u128bits_to_fix(bits_str: &String) -> String {
 #[cfg(test)]
 mod tests {
 
+    use fixed::types::U64F64;
+
     #[test]
     fn test_u128_max() {
         println!("{}", u128::MAX);
+        
+    }
+
+    #[test]
+    fn test_u128_to_fix() {
+        println!("{}", U64F64::from_bits(982739638032320520u128))
     }
 }

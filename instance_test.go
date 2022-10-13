@@ -157,6 +157,15 @@ func TestConcurrency(t *testing.T) {
 	wg.Wait()
 }
 
+func TestValue(t *testing.T) {
+	// 0.0532744225271130083
+	b, _ := big.NewInt(0).SetString("982739638032320520", 10)
+	d, err := U128BitsToFix(ctx, b)
+	require.NoError(t, err)
+	fmt.Println(d, "(should be:)")
+	fmt.Println("0.0532744225271130083")
+}
+
 func deltaEq(t *testing.T, f0, f1 float64) {
 	require.InDelta(t, f0, f1, 0.001, "not nearly equal: %f %f", f0, f1)
 }
