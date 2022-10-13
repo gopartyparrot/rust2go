@@ -158,12 +158,11 @@ func TestConcurrency(t *testing.T) {
 }
 
 func TestValue(t *testing.T) {
-	// 0.0532744225271130083
 	b, _ := big.NewInt(0).SetString("1341723281558402372940796526592", 10)
-	d, err := U128BitsToFix(ctx, b)
+	d, err := U128BitsToFix(context.Background(), b)
 	require.NoError(t, err)
-	fmt.Println(d, "(should be:)")
-	fmt.Println("0.0532744225271130083")
+	fmt.Println(d, "(should be 72734964837)")
+
 }
 
 func deltaEq(t *testing.T, f0, f1 float64) {

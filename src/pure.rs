@@ -19,6 +19,7 @@ pub fn u128bits_to_fix(bits_str: &String) -> String {
 #[cfg(test)]
 mod tests {
 
+    use crate::pure::*;
     use fixed::types::U64F64;
 
     #[test]
@@ -28,6 +29,9 @@ mod tests {
 
     #[test]
     fn test_u128_to_fix() {
-        println!("{}", U64F64::from_bits(1341723281558402372940796526592))
+        println!(
+            "{}",
+            u128bits_to_fix(&"1341723281558402372940796526592".to_string())
+        )
     }
 }
