@@ -159,7 +159,7 @@ func TestConcurrency(t *testing.T) {
 
 func TestValue(t *testing.T) {
 	// 0.0532744225271130083
-	b, _ := big.NewInt(0).SetString("982739638032320520", 10)
+	b, _ := big.NewInt(0).SetString("1341723281558402372940796526592", 10)
 	d, err := U128BitsToFix(ctx, b)
 	require.NoError(t, err)
 	fmt.Println(d, "(should be:)")

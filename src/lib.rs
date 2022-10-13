@@ -16,13 +16,13 @@ mod pure;
 #[no_mangle]
 pub unsafe extern "C" fn _f64_to_fix_bits(ptr: u32, len: u32) -> u64 {
     // log(&["_f64_to_fix_bits >> ", &mem::ptr_to_string(ptr, len)].concat()); //example debug code
-    mem::process_str(pure::f64_to_fix_bits, ptr, len)
+    process_str(pure::f64_to_fix_bits, ptr, len)
 }
 
 #[cfg_attr(all(target_arch = "wasm32"), export_name = "u128bits_to_fix")]
 #[no_mangle]
 pub unsafe extern "C" fn _u128bits_to_fix(ptr: u32, len: u32) -> u64 {
-    mem::process_str(pure::u128bits_to_fix, ptr, len)
+    process_str(pure::u128bits_to_fix, ptr, len)
 }
 
 /// Set the global allocator to the WebAssembly optimized one.
@@ -65,4 +65,26 @@ extern "C" {
     /// and ensures it isn't deallocated during this call.
     #[link_name = "log"]
     fn _log(ptr: u32, size: u32);
+}
+
+pub unsafe fn process_str<F>(process_fn: F, ptr: u32, len: u32) -> u64
+where
+    F: Fn(&String) -> String,
+{
+    let input_str = &mem::ptr_to_string(ptr, len);
+    let ret_str = process_fn(input_str);
+    log(&[
+        "input ==> ",
+        &mem::ptr_to_string(ptr, len),
+        " || output ==> ",
+        &ret_str,
+    ]
+    .concat()); // debug code
+    let (ptr, len) = mem::string_to_ptr(&ret_str);
+
+    // Note: This changes ownership of the pointer to the external caller. If
+    // we didn't call forget, the caller would read back a corrupt value. Since
+    // we call forget, the caller must deallocate externally to prevent leaks.
+    std::mem::forget(ret_str);
+    return ((ptr as u64) << 32) | len as u64;
 }

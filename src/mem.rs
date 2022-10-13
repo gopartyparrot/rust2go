@@ -32,18 +32,3 @@ pub fn allocate(size: usize) -> *mut u8 {
 pub unsafe fn deallocate(ptr: *mut u8, size: usize) {
     let _ = Vec::from_raw_parts(ptr, 0, size);
 }
-
-pub unsafe fn process_str<F>(process_fn: F, ptr: u32, len: u32) -> u64
-where
-    F: Fn(&String) -> String,
-{
-    let input_str = &ptr_to_string(ptr, len);
-    let ret_str = process_fn(input_str);
-    let (ptr, len) = string_to_ptr(&ret_str);
-
-    // Note: This changes ownership of the pointer to the external caller. If
-    // we didn't call forget, the caller would read back a corrupt value. Since
-    // we call forget, the caller must deallocate externally to prevent leaks.
-    std::mem::forget(ret_str);
-    return ((ptr as u64) << 32) | len as u64;
-}
