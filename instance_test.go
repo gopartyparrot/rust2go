@@ -168,7 +168,7 @@ func TestValue(t *testing.T) {
 		b, _ := big.NewInt(0).SetString(tt.input, 10)
 		d, err := U128BitsToFix(ctx, b)
 		assert.NoError(t, err)
-		assert.Equal(t, d.String(), tt.output, "for input %s, output should be: %s", tt.input, tt.output)
+		assert.Equal(t, tt.output, d.String(), "for input %s, output should be: %s", tt.input, tt.output)
 	}
 }
 
