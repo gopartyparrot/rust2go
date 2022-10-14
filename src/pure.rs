@@ -24,11 +24,12 @@ mod tests {
     #[test]
     fn test_u128_max() {
         println!("{}", u128::MAX);
-        
     }
 
     #[test]
     fn test_u128_to_fix() {
-        println!("{}", U64F64::from_bits(982739638032320520u128))
+        println!("{}", U64F64::from_bits(982739638032320520u128));
+
+        println!("{}", U64F64::from_num(1.25).to_bits());
     }
 }
