@@ -95,11 +95,9 @@ pub fn u128bits_to_fix(bits_str: &String) -> String {
         return format!("ERR: invalid u128 {}", bits_str);
     }
     let u1 = u.unwrap();
+    log(&format!("{:?}", u1.to_le_bytes()).to_string());
 
-    // u1.to_be_bytes()
+    fixed::types::U64F64::from_be_bytes(u1.to_be_bytes()).to_string()
 
-    fixed::types::U64F64::from_le_bytes(u1.to_le_bytes()).to_string()
-
-    // log(&format!("{:b}", u1).to_string());
     // fixed::types::U64F64::from_bits(u1).to_string()
 }
