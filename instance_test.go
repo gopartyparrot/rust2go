@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -158,13 +159,18 @@ func TestConcurrency(t *testing.T) {
 }
 
 func TestValue(t *testing.T) {
-	b, _ := big.NewInt(0).SetString("1341723281558402372940796526592", 10)
-	d, err := U128BitsToFix(context.Background(), b)
-	require.NoError(t, err)
-	fmt.Println(d, "(should be 72734964837)")
-
+	for _, tt := range []struct {
+		input, output string
+	}{
+		{"1341723281558402372940796526592", "72734964837"}, //this failed in some platform
+		{"23058430092136939520", "1.25"},
+	} {
+		b, _ := big.NewInt(0).SetString(tt.input, 10)
+		d, err := U128BitsToFix(ctx, b)
+		assert.NoError(t, err)
+		assert.Equal(t, tt.output, d.String(), "for input %s, output should be: %s", tt.input, tt.output)
+	}
 }
-
 func deltaEq(t *testing.T, f0, f1 float64) {
 	require.InDelta(t, f0, f1, 0.001, "not nearly equal: %f %f", f0, f1)
 }

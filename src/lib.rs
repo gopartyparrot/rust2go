@@ -22,7 +22,7 @@ pub unsafe extern "C" fn _f64_to_fix_bits(ptr: u32, len: u32) -> u64 {
 #[cfg_attr(all(target_arch = "wasm32"), export_name = "u128bits_to_fix")]
 #[no_mangle]
 pub unsafe extern "C" fn _u128bits_to_fix(ptr: u32, len: u32) -> u64 {
-    process_str(pure::u128bits_to_fix, ptr, len)
+    process_str(u128bits_to_fix, ptr, len)
 }
 
 /// Set the global allocator to the WebAssembly optimized one.
@@ -87,4 +87,14 @@ where
     // we call forget, the caller must deallocate externally to prevent leaks.
     std::mem::forget(ret_str);
     return ((ptr as u64) << 32) | len as u64;
+}
+
+pub fn u128bits_to_fix(bits_str: &String) -> String {
+    let u = bits_str.parse::<u128>();
+    if u.is_err() {
+        return format!("ERR: invalid u128 {}", bits_str);
+    }
+    let u1 = u.unwrap();
+    log(&format!("{:b}", u1).to_string());
+    fixed::types::U64F64::from_bits(u1).to_string()
 }
