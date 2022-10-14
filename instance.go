@@ -43,7 +43,7 @@ func createRuntime(ctx context.Context) (wazero.Runtime, api.Module, error) {
 	rt := wazero.NewRuntime(ctx) // Create a new WebAssembly Runtime.
 	// Instantiate a Go-defined module named "env" that exports a function to
 	// log to the console.
-	_, err := rt.NewModuleBuilder("env").
+	_, err := rt.NewHostModuleBuilder("env").
 		ExportFunction("log", logString).
 		Instantiate(ctx, rt)
 	if err != nil {
