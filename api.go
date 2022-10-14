@@ -39,14 +39,14 @@ func init() {
 
 func F64ToFixBits(ctx context.Context, f float64) (*big.Int, error) {
 	if !works {
-		log.Println("WARN (rust2go): return value may be wrong, please do not use this library!")
+		log.Println("WARN (rust2go): F64ToFixBits return value may be wrong, please do not use this library!")
 	}
 	return instance.F64ToFixBits(ctx, f)
 }
 
 func U128BitsToFix(ctx context.Context, b *big.Int) (decimal.Decimal, error) {
 	if !works {
-		log.Println("WARN (rust2go): return value may be wrong, please do not use this library!")
+		log.Println("WARN (rust2go): U128BitsToFix return value may be wrong, please do not use this library!")
 	}
 	return instance.U128BitsToFix(ctx, b)
 }
