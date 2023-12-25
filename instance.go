@@ -44,8 +44,8 @@ func createRuntime(ctx context.Context) (wazero.Runtime, api.Module, error) {
 	// Instantiate a Go-defined module named "env" that exports a function to
 	// log to the console.
 	_, err := rt.NewHostModuleBuilder("env").
+		NewFunctionBuilder().WithFunc(logString).Export("log").
 		Instantiate(ctx)
-		// ExportFunction("log", logString).
 	if err != nil {
 		return nil, nil, err
 	}
