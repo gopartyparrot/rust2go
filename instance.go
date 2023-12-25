@@ -44,21 +44,22 @@ func createRuntime(ctx context.Context) (wazero.Runtime, api.Module, error) {
 	// Instantiate a Go-defined module named "env" that exports a function to
 	// log to the console.
 	_, err := rt.NewHostModuleBuilder("env").
-		ExportFunction("log", logString).
-		Instantiate(ctx, rt)
+		Instantiate(ctx)
+		// ExportFunction("log", logString).
 	if err != nil {
 		return nil, nil, err
 	}
 
 	// Instantiate a WebAssembly module that imports the "log" function defined
 	// in "env" and exports "memory" and functions we'll use in this example.
-	mod, err := rt.InstantiateModuleFromBinary(ctx, wasmBytes)
+	mod, err := rt.Instantiate(ctx, wasmBytes)
 	if err != nil {
 		return nil, nil, err
 	}
 	return rt, mod, nil
 }
 
+// TODO wazero upgraded to v1.6.0, maybe we don't need this, need to test more
 func (inst *Instance) resetRuntimeIfNeeded(ctx context.Context) (err error) {
 	if !inst.enableReInstantiate {
 		return nil
@@ -131,9 +132,9 @@ func (inst *Instance) processString(ctx context.Context, callFn string, input st
 	defer inst.mod.ExportedFunction("deallocate").Call(ctx, inputPtr, inputSize)
 
 	// The pointer is a linear memory offset, which is where we write the name.
-	if !inst.mod.Memory().Write(ctx, uint32(inputPtr), []byte(input)) {
+	if !inst.mod.Memory().Write(uint32(inputPtr), []byte(input)) {
 		return "", errors.Errorf("Memory.Write(%d, %d) out of range of memory size %d",
-			inputPtr, inputSize, inst.mod.Memory().Size(ctx))
+			inputPtr, inputSize, inst.mod.Memory().Size())
 	}
 
 	// Finally, we get the greeting message "greet" printed. This shows how to
@@ -150,16 +151,16 @@ func (inst *Instance) processString(ctx context.Context, callFn string, input st
 	defer inst.mod.ExportedFunction("deallocate").Call(ctx, uint64(retPtr), uint64(retSize))
 
 	// The pointer is a linear memory offset, which is where we write the name.
-	bytes, ok := inst.mod.Memory().Read(ctx, retPtr, retSize)
+	bytes, ok := inst.mod.Memory().Read(retPtr, retSize)
 	if !ok {
 		return "", errors.Errorf("Memory.Read(%d, %d) out of range of memory size %d",
-			retPtr, retSize, inst.mod.Memory().Size(ctx))
+			retPtr, retSize, inst.mod.Memory().Size())
 	}
 	return string(bytes), nil
 }
 
 func logString(ctx context.Context, m api.Module, offset, byteCount uint32) {
-	buf, ok := m.Memory().Read(ctx, offset, byteCount)
+	buf, ok := m.Memory().Read(offset, byteCount)
 	if !ok {
 		log.Panicf("Memory.Read(%d, %d) out of range", offset, byteCount)
 	}

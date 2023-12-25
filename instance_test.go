@@ -158,6 +158,7 @@ func TestConcurrency(t *testing.T) {
 	wg.Wait()
 }
 
+// ubuntu 20.04 LTS failed in some machine
 func TestValue(t *testing.T) {
 	for _, tt := range []struct {
 		input, output string
