@@ -68,7 +68,9 @@ func BenchmarkFixFunctions(b *testing.B) {
 
 // this test find a reInstantiateThreshold
 // TODO should test in different env, e.g. server env, docker env
+// ERR: call fn failed: wasm error: out of bounds memory access
 func TestReInstantiateThreshold(t *testing.T) {
+	start := time.Now()
 	inst, _ := newInstance(ctx)
 	inst.enableReInstantiate = false
 
@@ -77,19 +79,25 @@ func TestReInstantiateThreshold(t *testing.T) {
 		f := rand.Float64()
 		u128bits, err := inst.F64ToFixBits(ctx, f)
 		if err != nil {
+			fmt.Println("ERR:", err) //ERR: call fn failed: wasm error: out of bounds memory access
 			break
 		}
 
 		f64, err := inst.U128BitsToFix(ctx, u128bits)
 		if err != nil {
+			fmt.Println("ERR:", err)
 			break
 		}
 
 		deltaEq(t, f, f64.InexactFloat64())
 		count++
+
+		if count%1000 == 0 {
+			fmt.Println(count, time.Since(start))
+		}
 	}
 
-	t.Log("reInstantiateThreshold", count)
+	t.Log("reInstantiateThreshold", count, time.Since(start))
 }
 
 // simple test: how many ops per second
