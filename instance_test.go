@@ -106,8 +106,10 @@ func TestSimpleSpeed(t *testing.T) {
 		return
 	}
 
-	count := 0
-	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	sec := time.Duration(10)
+
+	count := int64(0)
+	ctx, cancel := context.WithTimeout(ctx, sec*time.Second)
 	defer cancel()
 outer:
 	for {
@@ -126,7 +128,7 @@ outer:
 		deltaEq(t, f, f64.InexactFloat64())
 		count++
 	}
-	t.Logf("total count: %d, ops/sec: %d\n", count, 2*count/5)
+	t.Logf("total count: %d, ops/sec: %d\n", count, 2*count/int64(sec))
 }
 
 // should works in goroutines, since mutex used

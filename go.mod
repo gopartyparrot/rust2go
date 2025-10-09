@@ -1,13 +1,15 @@
 module github.com/gopartyparrot/rust2go
 
-go 1.18
+go 1.22.0
+
+toolchain go1.23.0
 
 require (
 	github.com/pkg/errors v0.9.1
 	github.com/pkg/profile v1.6.0
 	github.com/shopspring/decimal v1.3.1
 	github.com/stretchr/testify v1.8.0
-	github.com/tetratelabs/wazero v1.7.3
+	github.com/tetratelabs/wazero v1.9.0
 )
 
 require (
